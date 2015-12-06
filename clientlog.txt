@@ -1,0 +1,184 @@
+01/12/2015 02:30:53
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 02:30:53
+New torrent
+01/12/2015 02:30:53
+Connected to tracker
+01/12/2015 02:47:55
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 02:47:55
+New torrent
+01/12/2015 02:47:55
+Connected to tracker
+01/12/2015 02:48:17
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 02:48:17
+New torrent
+01/12/2015 02:48:17
+Connected to tracker
+01/12/2015 02:54:06
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 02:54:06
+New torrent
+01/12/2015 02:54:06
+Connected to tracker
+01/12/2015 02:54:27
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 02:54:27
+New torrent
+01/12/2015 02:54:27
+Connected to tracker
+01/12/2015 20:45:45
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 20:45:45
+New torrent
+01/12/2015 20:45:45
+Connected to tracker
+01/12/2015 20:46:43
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 20:46:43
+New torrent
+01/12/2015 20:46:43
+Connected to tracker
+01/12/2015 21:30:47
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 21:30:47
+Opening Existing torrent
+01/12/2015 21:30:47
+Torrent Selected
+01/12/2015 21:32:12
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+01/12/2015 21:32:12
+Opening Existing torrent
+01/12/2015 21:32:12
+Torrent Selected
+02/12/2015 00:14:12
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 00:14:12
+Opening Existing torrent
+02/12/2015 00:14:12
+Torrent Selected
+02/12/2015 00:14:33
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 00:14:33
+Opening Existing torrent
+02/12/2015 00:14:33
+Torrent Selected
+02/12/2015 00:15:23
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 00:15:23
+Opening Existing torrent
+02/12/2015 00:15:23
+Torrent Selected
+02/12/2015 00:19:47
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 00:19:47
+Opening Existing torrent
+02/12/2015 00:19:47
+Torrent Selected
+02/12/2015 00:21:59
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 00:21:59
+Opening Existing torrent
+02/12/2015 00:21:59
+Torrent Selected
+02/12/2015 00:25:45
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 00:25:45
+Opening Existing torrent
+02/12/2015 00:25:45
+Torrent Selected
+02/12/2015 01:08:09
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 01:08:09
+New torrent
+02/12/2015 01:08:09
+Connected to tracker
+02/12/2015 12:26:36
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 12:26:36
+New torrent
+02/12/2015 12:26:36
+Connected to tracker
+02/12/2015 14:52:12
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 14:52:12
+New torrent
+02/12/2015 14:52:12
+Connected to tracker
+02/12/2015 14:52:38
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 14:52:38
+New torrent
+02/12/2015 14:52:38
+Connected to tracker
+02/12/2015 19:58:39
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 19:58:39
+New torrent
+02/12/2015 19:58:39
+Connected to tracker
+02/12/2015 20:07:00
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 20:07:00
+New torrent
+02/12/2015 20:07:00
+Connected to tracker
+02/12/2015 20:11:26
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 20:11:26
+New torrent
+02/12/2015 20:11:26
+Connected to tracker
+02/12/2015 20:29:25
+----------Advanced SE-----------
+********CLIENT LOG*******
+-----------PROJECT 1-----------------
+02/12/2015 20:29:25
+New torrent
+02/12/2015 20:29:25
+Connected to tracker
