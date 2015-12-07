@@ -96,7 +96,7 @@ public class FileSplitter
 	  */
 	public static void join(String baseFilename) throws IOException
 		{
-		String directory = "D:\\xampp\\htdocs\\Bittorrent\\Files"+stripExtension(baseFilename);
+		String directory = "D:\\xampp\\htdocs\\Bittorrent\\Files\\"+stripExtension(baseFilename);
 		int numberParts = getNumberParts(directory+"\\"+baseFilename);
 
 		// now, assume that the files are correctly numbered in order (that some joker didn't delete any part)

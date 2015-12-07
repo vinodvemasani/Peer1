@@ -2,28 +2,28 @@
  * Created by Rakesh on 11/23/2015.
  */
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.*;
+import java.net.*;
 
 public class DownloadPiece implements Runnable {
     String fileURL = "";
     String destinationDirectory = "";
+    int piece;
+    Socket updateSocket;
 
-    DownloadPiece(String fURL, String dDirectory) {
+    DownloadPiece(String fURL, String dDirectory, int piece) {
         destinationDirectory = dDirectory;
         fileURL = fURL;
+        this.piece = piece;
     }
 
     public void run() {
-        download(fileURL, destinationDirectory);
+        download(fileURL, destinationDirectory, piece);
     }
 
-    public synchronized void download(String fileURL, String destinationDirectory) {
+    public synchronized void download(String fileURL, String destinationDirectory, int piece) {
         // File name that is being downloaded
         String downloadedFileName = fileURL.substring(fileURL.lastIndexOf("/") + 1);
         File downloadsDir = new File(destinationDirectory);
@@ -58,7 +58,6 @@ public class DownloadPiece implements Runnable {
         byte[] buffer = new byte[1048576];
         int bytesRead = 0;
 
-        System.out.println("Downloading " + downloadedFileName);
         try {
             while ((bytesRead = is.read(buffer)) != -1) {
                 System.out.print(".");  // Progress bar :)
@@ -68,8 +67,7 @@ public class DownloadPiece implements Runnable {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("done!");
-
+        System.out.println("Downloaded piece " + downloadedFileName );
         // Close destination stream
         try {
             fos.close();
@@ -83,6 +81,47 @@ public class DownloadPiece implements Runnable {
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+        } finally {
+            //update the info file
+
+//            System.out.println("inside finally finished downloading" + piece);
+            try {
+                PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(destinationDirectory + "//" + "info.ase", true)));
+                //get the piece from file url
+//                System.out.println("piece " + piece);
+                writer.print(piece + "\t");
+                writer.flush();
+                writer.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                updateSocket = new Socket("localhost", 8090);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Updating XMl in the tracker to indicate this peer also has the piece"+piece);
+            PrintWriter printWriter = null;
+            try {
+                printWriter = new PrintWriter(updateSocket.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String tempIP = null;
+            try {
+                tempIP = InetAddress.getLocalHost() + ":81";
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            }
+//            downloadedFileName.substring(0,downloadedFileName.length()-2)
+
+            System.out.println("updating" + "," + FilenameUtils.getBaseName(fileURL) + "," + "Peer1" + "," + tempIP + "," + 81 + "," + 1);
+            printWriter.println("updating" + "," + FilenameUtils.getBaseName(fileURL) + "," + "Peer1" + "," + tempIP + "," + 81 + "," + 1);
+            printWriter.flush();
         }
     }
 }

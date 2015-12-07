@@ -1,23 +1,25 @@
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.util.*;
+
+import static java.util.Arrays.sort;
 
 /**
  * Created by Rakesh on 11/14/2015.
  */
 public class DownloadManager extends Thread {
-    String Name = null, Size = null, Pieces = null, Tracker = null, peerId = null;
+    String Name = null, Size = null, Tracker = null, peerId = null;
+    int Pieces;
     Socket downloadManagerSocket;
     int serverSocketPort = 8090;
     String downloadPath = "D:\\xampp\\htdocs\\Bittorrent\\Files\\";
-    int retPieceLength =0;
+    int retPieceLength = 0;
 
 
-    public DownloadManager(String name, String tracker, String size, String pieces, String peerId) {
+    public DownloadManager(String name, String tracker, String size, int pieces, String peerId) {
         this.Name = name;
         this.Tracker = tracker;
         this.Size = size;
@@ -45,58 +47,69 @@ public class DownloadManager extends Thread {
         readTrackerResponse();
     }
 
-    public void readTrackerResponse() throws IOException {
-        ObjectInputStream peerDetailsInputStream = new ObjectInputStream(downloadManagerSocket.getInputStream());
+    public void readTrackerResponse() {
+        ObjectInputStream peerDetailsInputStream = null;
+        try {
+            peerDetailsInputStream = new ObjectInputStream(downloadManagerSocket.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         ArrayList<String> peerIds = new ArrayList<String>();
         ArrayList<ArrayList<String>> peerDetails = new ArrayList<ArrayList<String>>();
         try {
-            HashMap<String, AbstractList<String>> peers = (HashMap<String, AbstractList<String>>) peerDetailsInputStream.readObject();
+            HashMap<String, AbstractList<String>> peers = null;
+            try {
+                peers = (HashMap<String, AbstractList<String>>) peerDetailsInputStream.readObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Iterator it = peers.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
                 peerIds.add(String.valueOf(pair.getKey()));
                 peerDetails.add((ArrayList<String>) pair.getValue());
-//                System.out.println(pair.getKey() + " = " + pair.getValue());
+                System.out.println(pair.getKey() + " = " + pair.getValue());
 //                it.remove(); // avoids a ConcurrentModificationException
             }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //for each peer invoke download
-//        int pieceLength=0;
+        String directory = downloadPath + FilenameUtils.getBaseName(Name);
         for (int i = 0; i < peerIds.size(); i++) {
-//            System.out.println(i);
-            retPieceLength += downloadStrategy(String.valueOf(peerDetails.get(i).get(0)), Integer.parseInt(String.valueOf(peerDetails.get(i).get(2))));
+            String[] tempIp = String.valueOf(peerDetails.get(i).get(0)).split(":");
+            if (!(tempIp[1].equalsIgnoreCase("81"))) {
+                try {
+                    retPieceLength = downloadStrategy(String.valueOf(peerDetails.get(i).get(0)), Integer.parseInt(String.valueOf(peerDetails.get(i).get(2))));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("some parts of the file is already present");
+            }
         }
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String directory = "C:\\Users\\Rakesh\\IdeaProjects\\Peer1\\TempDownloads\\" + FilenameUtils.getBaseName(Name);
-        int noOfPieces = getNumberParts(directory + "\\" + Name);
-        System.out.println("no of pieces" + noOfPieces);
-        System.out.println(retPieceLength);
-        if (noOfPieces == retPieceLength) {
-            // write the downloaded info to tracker xml
-            System.out.println("Updating XMl in the tracker to indicate this peer also has the file");
-            PrintWriter printWriter = new PrintWriter(downloadManagerSocket.getOutputStream());
-            String tempIP = InetAddress.getLocalHost() +":81";
-            printWriter.write("updating" + "," + Name + "," + peerId + "," + tempIP+ "," + 81 + "," + noOfPieces);
-            printWriter.flush();
-            //create a new info.ase file inside the downloads folder after download
-            PrintWriter writer = new PrintWriter(downloadPath+ FilenameUtils.getBaseName(Name) + "//"+"info.ase","UTF-8");
-            for(int i=0;i<noOfPieces;i++) {
-                writer.print(i + "\t");
-            }
-            writer.close();
+        int newNoOfPieces = 0;
+        try {
+            newNoOfPieces = getNumberParts(directory + "\\" + Name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("no of pieces" + newNoOfPieces);
+        System.out.println("return piece length" + retPieceLength);
+        if ((Pieces == newNoOfPieces)) {
+            //all the pieces are downloaded
+            System.out.println("Joining files.....");
             joinFiles();
+
         }
     }
 
     public int downloadStrategy(String ip, int pieceLength) throws IOException {
         try {
-            retPieceLength =0;
             String[] temp = ip.split("/");
             String newIp = temp[1];
             String BaseURL = "http://" + newIp + "/Bittorrent/Files/" + FilenameUtils.getBaseName(Name) + "/" + Name;
@@ -108,12 +121,21 @@ public class DownloadManager extends Thread {
             URL pieceInfoURL = new URL(pieceInfo);
             BufferedReader br = new BufferedReader(new InputStreamReader(pieceInfoURL.openStream()));
             String inputLine;
-            String[] piecesToDownload = new String[pieceLength];
+            String[] pieces = new String[pieceLength];
+            int[] piecesToDownload = new int[pieceLength];
             while ((inputLine = br.readLine()) != null) {
-                System.out.println("pieces to download"+ inputLine);
-                piecesToDownload = inputLine.split("\t");
+//                System.out.println("pieces to download\t" + inputLine);
+                pieces = inputLine.split("\t");
             }
             br.close();
+            for (int i = 0; i < pieces.length; i++) {
+                piecesToDownload[i] = Integer.parseInt(pieces[i]);
+            }
+            sort(piecesToDownload);
+            System.out.println("pieces to download from" + newIp);
+            for (int i : piecesToDownload) {
+                System.out.print(i + "\t");
+            }
             Process p1 = java.lang.Runtime.getRuntime().exec("ping -n 1 " + pingIp);
             int returnVal = 1;
             try {
@@ -124,19 +146,24 @@ public class DownloadManager extends Thread {
             }
 
             boolean reachable = (returnVal == 0);
-            String checkDownloadPath = downloadPath + FilenameUtils.getBaseName(Name) + "//"+ Name;
+            String checkDownloadPath = downloadPath + FilenameUtils.getBaseName(Name) + "//" + Name;
             if (reachable) {
                 try {
                     for (int i = 0; i < pieceLength; i++) {
                         // check if the piece is already downloaded
                         File downloadedPiece = new File(checkDownloadPath + "." + i);
                         boolean exists = downloadedPiece.exists();
-                        if(!exists) {
+                        if (!exists) {
                             retPieceLength++;
-                            Thread thread = new Thread(new DownloadPiece(BaseURL + "." + piecesToDownload[i], downloadPath + FilenameUtils.getBaseName(Name) + "//"));
+                            try {
+                                Thread.sleep(3000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            Thread thread = new Thread(new DownloadPiece(BaseURL + "." + piecesToDownload[i], downloadPath + FilenameUtils.getBaseName(Name) + "\\", i));
                             thread.start();
-                        }else{
-                            System.out.println("Piece"+ i +"already downloaded... downloading other pieces");
+                        } else {
+                            System.out.println("Piece" + i + "already downloaded... downloading other pieces");
                         }
                     }
                 } catch (Exception ex) {
