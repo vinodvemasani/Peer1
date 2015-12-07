@@ -1,8 +1,3 @@
-/**
- * Created by Rakesh on 11/13/2015.
- */
-
-
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -79,24 +74,33 @@ public class Peer_Client {
                 writer.println("Tracker-" + trackerURL);
                 writer.println("File Size-" + inputFile.length());
                 writer.println("Pieces-" + torrentFile.getPiece());
+                //appending to log
+                writer_log.println("Name-" + torrentFile.getFileName());
+                writer_log.println("Tracker-" + trackerURL);
+                writer_log.println("File Size-" + inputFile.length());
+                writer_log.println("Pieces-" + torrentFile.getPiece());
                 writer.close();
 
                 //open socket and send peer details to tracker
                 try {
                     socket = new Socket("localhost", PORT);
                     System.out.println("Connected to Tracker...");
+                  //appending to log
                     writer_log.println(date.format(calender.getTime()));
                     writer_log.println("Connected to tracker");
 
                 } catch (Exception e) {
                     System.out.println("Could not connect to Tracker try again , Error --" + e.toString());
+                  //appending to log
                     writer_log.println(date.format(calender.getTime()));
                     writer_log.println("Could not connect to Tracker try again , Error --" + e.toString());
                 }
                 PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
                 String tempIP = InetAddress.getLocalHost() + ":81";
                 System.out.println("registering with tracker...");
+                writer_log.println("registering with tracker...");
                 printWriter.write("register" + "," + torrentFile.getFileName() + "," + peerID + "," + tempIP + "," + 81 + "," + piece);
+                writer_log.println("register" + "," + torrentFile.getFileName() + "," + peerID + "," + tempIP + "," + 81 + "," + piece);
                 printWriter.flush();
                 socket.close();
                 printWriter.close();
@@ -118,6 +122,7 @@ public class Peer_Client {
             File inputFile = fileChooser.getSelectedFile();
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 System.out.println("Opening existing torrent...");
+                writer_log.println("Opening existing torrent...");
                 if (inputFile.exists()) {
                     FileReader torrentFile = null;
                     try {
@@ -125,6 +130,7 @@ public class Peer_Client {
                     } catch (FileNotFoundException e1) {
                         // TODO Auto-generated catch block
                         e1.printStackTrace();
+                        writer_log.println("Exception message"+e1);
                     }
                     try {
                         BufferedReader reader = new BufferedReader(torrentFile);
@@ -135,20 +141,25 @@ public class Peer_Client {
                             if (temp[0].equals("Name")) {
                                 Name = temp[1];
                                 System.out.println("\nName: " + Name);
+                                writer_log.println("\nName: " + Name);
                             } else if (temp[0].equals("Tracker")) {
                                 Tracker = temp[1];
                                 System.out.println("\nTracker: " + Tracker);
+                                writer_log.println("\nTracker: " + Tracker);
                             } else if (temp[0].equals("File Size")) {
                                 Size = temp[1];
                                 System.out.println("\nFile Size: " + Size);
+                                writer_log.println("\nFile Size: " + Size);
                             } else if (temp[0].equals("Pieces")) {
                                 Pieces = temp[1];
                                 System.out.println("\nNumber of Pieces: " + Pieces);
+                                writer_log.println("\nNumber of Pieces: " + Pieces);
                             }
                         }
                         reader.close();
                     } catch (IOException x) {
                         System.err.println(x);
+                        writer_log.println("Exception message"+x);
                     }
 
                     Thread client = new DownloadManager(Name, Tracker, Size, Integer.parseInt(Pieces), peerID);
@@ -161,4 +172,3 @@ public class Peer_Client {
 //        }
     }
 }
-
